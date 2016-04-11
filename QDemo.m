@@ -10,4 +10,3 @@ for l=1:size(robot.best,1)
     s=robot.best(l,[4,5]);
     disp([num2str(s0),'  |  ',num2str(a),'  |  ',num2str(s)]);
 end
-size(robot.best,1)

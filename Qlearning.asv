@@ -68,13 +68,9 @@ for lp=1:N
     end     
 end
 
-plot([1:LearnN],all_step)
-%hold on
-%for plot_print=1:LearnN
-%    if all_step(plot_print)>=size(robot.best,1)
-%       plot(plot_print,all_step(plot_print))
-%    end
-%end
+%plot([1:LearnN],all_step)
+for plot_print=1:learnN
+    if(all_step(plot_print))
 function s=exact(s,a)
 switch(a)
     case 1   % dowm

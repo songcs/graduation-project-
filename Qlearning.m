@@ -15,8 +15,8 @@ for lp=1:N
     s0=si;k0=ki;
     step=0;
     slist=[];
-    check_loop=zeros(10,10);
-    check_loop(s0(1),s0(2))=1;
+    %check_loop=zeros(10,10);
+    %check_loop(s0(1),s0(2))=1;
     while k0~=kt %在这一次迭代中，要从初始状态找到终点
         qs=Q(k0,:);
         q=min(qs);%q是找出k0状态，最小的q值
@@ -31,8 +31,8 @@ for lp=1:N
         s=exact(s0,a); %s就是转移后的状态
         if any(s<1)||any(s>m)||any(s>n)    % 防止超越环境
             Q(k0,a)=Q(k0,a)-100; break; %给这个转移策略弄成负值
-        elseif check_loop(s(1),s(2))==1
-            Q(k0,a)=Q(k0,a)-100; break; %给这个转移策略弄成负值
+        %elseif check_loop(s(1),s(2))==1
+         %   Q(k0,a)=Q(k0,a)-100; break; %给这个转移策略弄成负值
         else               % feasible
             k=sub2ind([m,n],s(1),s(2)); %提取数组中的索引值                      
             v=max(Q(k,:));                 % 找出k状态中q值最大的一个
@@ -41,7 +41,7 @@ for lp=1:N
         end       
         slist=[slist;s0,a,s];%slist就存储着：状态由s0通过a方向转移到s
         s0=s;k0=k;step=step+1;
-        check_loop(s0(1),s0(2))=1;
+        %check_loop(s0(1),s0(2))=1;
       disp([num2str(s0),' | ',num2str(a),' | ',num2str(s),' LearnN ',num2str(LearnN),' step ',num2str(step)])  % 打印状态转移
     end
     LearnN=LearnN+1;  

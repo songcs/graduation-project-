@@ -8,6 +8,7 @@ LearnN=0;
 si=task.initialState;ki=sub2ind([m,n],si(1),si(2));%提取开始位置在数组中的索引值
 st=task.terminalState;kt=sub2ind([m,n],st(1),st(2));%提取终点位置在数组中的索引值
 sstemp =[];
+suc_lp=0;
 for lp=1:N
     alp=alp*exp((1-rem(lp,10))/N);%贪婪策略   rem(x,y):x除以y的余数
     Q=robot.Qtable;        % load the new table载入新的表
@@ -45,10 +46,12 @@ for lp=1:N
       disp([num2str(s0),' | ',num2str(a),' | ',num2str(s),' LearnN ',num2str(LearnN),' step ',num2str(step)])  % 打印状态转移
     end
     LearnN=LearnN+1;  
-    sstemp=[sstemp,step];
+    
     robot.state=s;         % update the robot更新机器人
     robot.Qtable=Q;
     if k0==kt
+        sstemp=[sstemp,step];
+        suc_lp=suc_lp+1;
         if isempty(robot.best), % record记录
             robot.best=slist;
         elseif step<size(robot.best,1),
@@ -56,7 +59,7 @@ for lp=1:N
         end  
     end     
 end
-plot([1:LearnN],sstemp)
+plot([1:suc_lp],sstemp)
 function s=exact(s,a)
 switch(a)
     case 1   % dowm

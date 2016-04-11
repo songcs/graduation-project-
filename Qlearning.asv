@@ -35,8 +35,8 @@ for lp=1:N
         s=exact(s0,a); %s就是转移后的状态
         if any(s<1)||any(s>m)||any(s>n)    % 防止超越环境
             Q(k0,a)=Q(k0,a)-100; break; %给这个转移策略弄成负值
-        %elseif check_loop(s(1),s(2))==1
-         %   Q(k0,a)=Q(k0,a)-100; break; %给这个转移策略弄成负值
+%       elseif check_loop(s(1),s(2))==1
+%           Q(k0,a)=Q(k0,a)-100; break; %给这个转移策略弄成负值
         else               % feasible
             k=sub2ind([m,n],s(1),s(2)); %提取数组中的索引值                      
             v=max(Q(k,:));                 % 找出k状态中q值最大的一个
@@ -44,20 +44,28 @@ for lp=1:N
             Q(k0,a)=Q(k0,a)+alp*D; %更新k0状态下a方向的q值
         end       
         slist=[slist;s0,a,s];%slist就存储着：状态由s0通过a方向转移到s
-        s0=s;k0=k;step=step+1;
-        Q(k_fa_1,a)=Q(k0,a)+alp*D;
+        
+        if k_fa_1(1)>0
+            Q(k_fa_1(1),k_fa_1(2))=Q(k0,a)+alp*Q(k0,a);
+            if k_fa_2(1)>0
+                Q(k_fa_2(1),k_fa_2(2))=Q(k_fa_2(1),k_fa_2(2))+alp*Q(k_fa_1(1),k_fa_1(2));
+                if k_fa_3(1)>0
+                    Q(k_fa_3(1),k_fa_3(2))=Q(k_fa_3(1),k_fa_3(2))+alp*Q(k_fa_2(1),k_fa_2(2));
+                end
+            end
+        end
         k_fa_3=k_fa_2;
         k_fa_2=k_fa_1;
-        k_fa_1=k0;
-        
+        k_fa_1=[k0,a];
+
+        s0=s;k0=k;step=step+1;
         %check_loop(s0(1),s0(2))=1;
       disp([num2str(s0),' | ',num2str(a),' | ',num2str(s),' LearnN ',num2str(LearnN),' step ',num2str(step)])  % 打印状态转移
     end
-    LearnN=LearnN+1;  
-    
     robot.state=s;         % update the robot更新机器人
     robot.Qtable=Q;
     if k0==kt
+        LearnN=LearnN+1;  
         sstemp=[sstemp,step];
         suc_lp=suc_lp+1;
         if isempty(robot.best), % record记录
@@ -67,6 +75,7 @@ for lp=1:N
         end  
     end     
 end
+hold on'
 plot([1:suc_lp],sstemp)
 function s=exact(s,a)
 switch(a)

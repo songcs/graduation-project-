@@ -64,7 +64,14 @@ for lp=1:N
     end
     robot.state=s;         % update the robot更新机器人
     robot.Qtable=Q;
+    
+%     保留超出边界的点
+%     LearnN=LearnN+1;  
+%     sstemp=[sstemp,step];
+%     suc_lp=suc_lp+1;
+    
     if k0==kt
+%         抛去超出边界的店
         LearnN=LearnN+1;  
         sstemp=[sstemp,step];
         suc_lp=suc_lp+1;
@@ -75,6 +82,7 @@ for lp=1:N
         end  
     end     
 end
+hold on
 plot([1:suc_lp],sstemp)
 function s=exact(s,a)
 switch(a)

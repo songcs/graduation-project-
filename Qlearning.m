@@ -9,6 +9,7 @@ si=task.initialState;ki=sub2ind([m,n],si(1),si(2));%提取开始位置在数组中的索引值
 st=task.terminalState;kt=sub2ind([m,n],st(1),st(2));%提取终点位置在数组中的索引值
 sstemp =[];
 suc_lp=0;
+sum_step=0;%本次学习总步数
 for lp=1:N
     alp=alp*exp((1-rem(lp,10))/N);%贪婪策略   rem(x,y):x除以y的余数
     Q=robot.Qtable;        % load the new table载入新的表
@@ -59,6 +60,7 @@ for lp=1:N
         k_fa_1=[k0,a];
 
         s0=s;k0=k;step=step+1;
+        sum_step=sum_step+1;
         %check_loop(s0(1),s0(2))=1;
       disp([num2str(s0),' | ',num2str(a),' | ',num2str(s),' LearnN ',num2str(LearnN),' step ',num2str(step)])  % 打印状态转移
     end
@@ -66,24 +68,25 @@ for lp=1:N
     robot.Qtable=Q;
     
 %     保留超出边界的点
-%     LearnN=LearnN+1;  
-%     sstemp=[sstemp,step];
-%     suc_lp=suc_lp+1;
+    LearnN=LearnN+1;  
+    sstemp=[sstemp,step];
+    suc_lp=suc_lp+1;
     
-    if k0==kt
-%         抛去超出边界的店
-        LearnN=LearnN+1;  
-        sstemp=[sstemp,step];
-        suc_lp=suc_lp+1;
-        if isempty(robot.best), % record记录
-            robot.best=slist;
-        elseif step<size(robot.best,1),
-            robot.best=slist;
-        end  
-    end     
+% %         抛去超出边界的店    
+%     if k0==kt
+%         LearnN=LearnN+1;  
+%         sstemp=[sstemp,step];
+%         suc_lp=suc_lp+1;
+%         if isempty(robot.best), % record记录
+%             robot.best=slist;
+%         elseif step<size(robot.best,1),
+%             robot.best=slist;
+%         end  
+%     end     
 end
 hold on
 plot([1:suc_lp],sstemp)
+disp(num2str(sum_step))
 function s=exact(s,a)
 switch(a)
     case 1   % dowm

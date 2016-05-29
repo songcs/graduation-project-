@@ -68,21 +68,21 @@ for lp=1:N
     robot.Qtable=Q;
     
 %     保留超出边界的点
-    LearnN=LearnN+1;  
-    sstemp=[sstemp,step];
-    suc_lp=suc_lp+1;
+%     LearnN=LearnN+1;  
+%     sstemp=[sstemp,step];
+%     suc_lp=suc_lp+1;
     
-% %         抛去超出边界的店    
-%     if k0==kt
-%         LearnN=LearnN+1;  
-%         sstemp=[sstemp,step];
-%         suc_lp=suc_lp+1;
-%         if isempty(robot.best), % record记录
-%             robot.best=slist;
-%         elseif step<size(robot.best,1),
-%             robot.best=slist;
-%         end  
-%     end     
+%         抛去超出边界的店    
+    if k0==kt
+        LearnN=LearnN+1;  
+        sstemp=[sstemp,step];
+        suc_lp=suc_lp+1;
+        if isempty(robot.best), % record记录
+            robot.best=slist;
+        elseif step<size(robot.best,1),
+            robot.best=slist;
+        end  
+    end     
 end
 hold on
 plot([1:suc_lp],sstemp)
